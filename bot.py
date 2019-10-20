@@ -11,6 +11,7 @@ from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
                           ConversationHandler)
 
 from config import Development as Config
+from translation import Translation
 
 from helper_funcs.step_one import request_tg_code_get_random_hash
 from helper_funcs.step_two import login_step_get_stel_cookie
@@ -33,9 +34,7 @@ GLOBAL_USERS_DICTIONARY = {}
 
 def start(update, context):
     update.message.reply_text(
-        'Hi! '
-        'Thank you for using me 😬 \n'
-        'Enter your Telegram Phone Number, to get the APP ID from my.telegram.org',
+        Translation.START_TEXT,
         parse_mode=ParseMode.HTML
     )
     return INPUT_PHONE_NUMBER
@@ -53,7 +52,7 @@ def input_phone_number(update, context):
         }
     })
     update.message.reply_text(
-        'I see! now please send the Telegram code that you received from Telegram! ',
+        Translation.AFTER_RECVD_CODE_TEXT,
         parse_mode=ParseMode.HTML
     )
     return INPUT_TG_CODE
@@ -63,13 +62,13 @@ def input_tg_code(update, context):
     user = update.message.from_user
     logger.info("Tg Code of %s: %s", user.first_name, update.message.text)
     current_user_creds = GLOBAL_USERS_DICTIONARY.get(user.id)
+    aes_mesg_i = update.message.reply_text(Translation.BEFORE_SUCC_LOGIN)
     s, c = login_step_get_stel_cookie(
         current_user_creds.get("input_phone_number"),
         current_user_creds.get("random_hash"),
         update.message.text
     )
     if s:
-        update.message.reply_text('recieved code. Scarpping web page ...')
         t, v = scarp_tg_existing_app(c)
         if not t:
             create_new_tg_app(
@@ -85,23 +84,21 @@ def input_tg_code(update, context):
         if t:
             me_t = json.dumps(v, sort_keys=True, indent=4)
             me_t += "\n\n❤️ @SpEcHlDe"
-            update.message.reply_text(
-                me_t,
+            aes_mesg_i.edit_text(
+                text=me_t,
                 parse_mode=ParseMode.HTML
             )
         else:
-            update.message.reply_text("something wrongings. failed to get app id. ")
+            aes_mesg_i.edit_text(Translation.ERRED_PAGE)
     else:
-        update.message.reply_text(c)
+        aes_mesg_i.edit_text(c)
     return ConversationHandler.END
 
 
 def cancel(update, context):
     user = update.message.from_user
     logger.info("User %s canceled the conversation.", user.first_name)
-    update.message.reply_text('Bye! I hope we can talk again some day.',
-                              reply_markup=ReplyKeyboardRemove())
-
+    update.message.reply_text(Translation.CANCELLED_MESG)
     return ConversationHandler.END
 
 
