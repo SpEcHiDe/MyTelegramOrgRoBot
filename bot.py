@@ -68,7 +68,8 @@ def input_tg_code(update, context):
     user = update.message.from_user
     logger.info("Tg Code of %s: %s", user.first_name, update.message.text)
     current_user_creds = GLOBAL_USERS_DICTIONARY.get(user.id)
-    del GLOBAL_USERS_DICTIONARY["user.id"]
+    if user.id in GLOBAL_USERS_DICTIONARY:
+        del GLOBAL_USERS_DICTIONARY[user.id]
     aes_mesg_i = update.message.reply_text(Translation.BEFORE_SUCC_LOGIN)
     s, c = login_step_get_stel_cookie(
         current_user_creds.get("input_phone_number"),
