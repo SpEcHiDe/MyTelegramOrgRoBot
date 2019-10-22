@@ -75,7 +75,7 @@ def input_tg_code(update, context):
                 c,
                 v.get("tg_app_hash"),
                 "usetgbot",
-                "usetgbot"
+                "usetgbot",
                 "https%3A%2F%2Ftelegram.dog%2FGetMyTGAppBot",
                 "other",
                 "created+using+https%3A%2F%2Ftelegram.dog%2FGetMyTGAppBot"
