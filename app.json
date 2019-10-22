@@ -1,0 +1,38 @@
+{
+  "name": "MyTelegramOrgRoBot",
+  "description": "get your APP ID and API HASH inside Telegram",
+  "keywords": [
+    "telegram",
+    "best",
+    "app",
+    "scrapper",
+    "3"
+  ],
+  "repository": "https://gitlab.com/SpEcHiDe/MyTelegramOrgRoBot",
+  "success_url": "https://telegram.dog/SpEcHlDe",
+  "website": "https://gitlab.com/SpEcHiDe/MyTelegramOrgRoBot",
+  "env": {
+    "WEBHOOK": {
+      "description": "Setting this to ANYTHING will enable webhooks when in env mode",
+      "value": "ANYTHING"
+    },
+    "TG_BOT_TOKEN": {
+      "description": "Your bot token, as a string.",
+      "value": ""
+    },
+    "HTTP_DOMAIN": {
+      "description": "The Heroku App URL similar to https://<appname>.herokuapp.com/",
+      "value": "https://example.com/"
+    },
+    "PORT": {
+      "description": "Port to use for your webhooks",
+      "value": "5000"
+    },
+  },
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
+  }
+}

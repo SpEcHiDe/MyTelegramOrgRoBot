@@ -3,14 +3,20 @@
 # (c) Shrimadhav U K
 
 
-import logging
 import json
+import logging
+import os
 
 from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, ParseMode)
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
                           ConversationHandler)
 
-from config import Development as Config
+WEBHOOK =  bool(os.environ.get("WEBHOOK", False))
+if WEBHOOK:
+    from sample_config import Config
+else:
+    from config import Development as Config
+
 from translation import Translation
 
 from helper_funcs.step_one import request_tg_code_get_random_hash
@@ -62,6 +68,7 @@ def input_tg_code(update, context):
     user = update.message.from_user
     logger.info("Tg Code of %s: %s", user.first_name, update.message.text)
     current_user_creds = GLOBAL_USERS_DICTIONARY.get(user.id)
+    del GLOBAL_USERS_DICTIONARY["user.id"]
     aes_mesg_i = update.message.reply_text(Translation.BEFORE_SUCC_LOGIN)
     s, c = login_step_get_stel_cookie(
         current_user_creds.get("input_phone_number"),
@@ -135,7 +142,15 @@ def main():
     dp.add_error_handler(error)
 
     # Start the Bot
-    updater.start_polling()
+    if WEBHOOK:
+        updater.start_webhook(
+            listen="0.0.0.0",
+            port=Config.PORT,
+            url_path=Config.TG_BOT_TOKEN
+        )
+        updater.bot.set_webhook(url=Config.URL + Config.TG_BOT_TOKEN)
+    else:
+        updater.start_polling()
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
