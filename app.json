@@ -8,9 +8,9 @@
     "scrapper",
     "3"
   ],
-  "repository": "https://gitlab.com/SpEcHiDe/MyTelegramOrgRoBot",
+  "repository": "https://github.com/SpEcHiDe/MyTelegramOrgRoBot",
   "success_url": "https://telegram.dog/SpEcHlDe",
-  "website": "https://gitlab.com/SpEcHiDe/MyTelegramOrgRoBot",
+  "website": "https://github.com/SpEcHiDe/MyTelegramOrgRoBot",
   "env": {
     "WEBHOOK": {
       "description": "Setting this to ANYTHING will enable webhooks when in env mode",
@@ -29,43 +29,43 @@
       "value": "5000"
     },
     "APP_TITLE": {
-      "description": "",
+      "description": "specify a custom app title",
       "required": false
     },
     "APP_SHORT_NAME": {
-      "description": "",
+      "description": "specify a custom alphamumeric shortname (5-32 characters)",
       "required": false
     },
     "APP_URL": {
-      "description": "",
+      "description": "specify a custom app URL",
       "required": false
     },
     "APP_DESCRIPTION": {
-      "description": "",
+      "description": "specify a custom app description",
       "required": false
     },
     "FTEXT": {
-      "description": "",
+      "description": "the footer text that will be seen in the bot message, after the final edit",
       "required": false
     },
     "START_TEXT": {
-      "description": "",
+      "description": "the start text of the Telegram bot",
       "required": false
     },
     "AFTER_RECVD_CODE_TEXT": {
-      "description": "",
+      "description": "the message that should be displayed before receiving the code from the user",
       "required": false
     },
     "BEFORE_SUCC_LOGIN": {
-      "description": "",
+      "description": "a temporary message that will be displayed after receiving the code, and before the validations",
       "required": false
     },
     "ERRED_PAGE": {
-      "description": "",
+      "description": "a string which will **never** occur, but still exists?",
       "required": false
     },
     "CANCELLED_MESG": {
-      "description": "",
+      "description": "a message that should be shown on /cancel",
       "required": false
     }
   },
