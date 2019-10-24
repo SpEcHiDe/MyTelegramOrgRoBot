@@ -1,11 +1,12 @@
 import os
+from translation import Translation
 
 class Config(object):
     # get a token from @BotFather
-    TG_BOT_TOKEN = os.environ.get('TG_BOT_TOKEN', None)
+    TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", None)
     # required for running on Heroku
-    URL = os.environ.get('URL', "")
-    PORT = int(os.environ.get('PORT', 5000))
+    URL = os.environ.get("URL", "")
+    PORT = int(os.environ.get("PORT", 5000))
     # Python3 ReQuests CHUNK SIZE
     CHUNK_SIZE = 10280
     # MyTelegram.org
@@ -16,6 +17,19 @@ class Config(object):
     APP_DESCRIPTION = os.environ.get("APP_DESCRIPTION", "created using https://telegram.dog/UseTGBot")
     #
     FOOTER_TEXT = os.environ.get("FTEXT", "❤️ @SpEcHlDe")
+    # the strings used in the different messages
+    # in the bot
+    START_TEXT = os.environ.get("START_TEXT", Translation.START_TEXT)
+    AFTER_RECVD_CODE_TEXT = os.environ.get(
+        "AFTER_RECVD_CODE_TEXT",
+        Translation.AFTER_RECVD_CODE_TEXT
+    )
+    BEFORE_SUCC_LOGIN = os.environ.get(
+        "BEFORE_SUCC_LOGIN",
+        Translation.BEFORE_SUCC_LOGIN
+    )
+    ERRED_PAGE = os.environ.get("ERRED_PAGE", Translation.ERRED_PAGE)
+    CANCELLED_MESG = os.environ.get("CANCELLED_MESG", Translation.CANCELLED_MESG)
 
 
 class Development(Config):

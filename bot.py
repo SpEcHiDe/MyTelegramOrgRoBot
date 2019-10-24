@@ -3,13 +3,17 @@
 # (c) Shrimadhav U K
 
 
-import json
 import logging
 import os
 
-from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, ParseMode)
-from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
-                          ConversationHandler)
+from telegram import ParseMode
+from telegram.ext import (
+    Updater,
+    CommandHandler,
+    MessageHandler,
+    Filters,
+    ConversationHandler
+)
 
 WEBHOOK =  bool(os.environ.get("WEBHOOK", False))
 if WEBHOOK:
@@ -17,12 +21,12 @@ if WEBHOOK:
 else:
     from config import Development as Config
 
-from translation import Translation
 
 from helper_funcs.step_one import request_tg_code_get_random_hash
 from helper_funcs.step_two import login_step_get_stel_cookie
 from helper_funcs.step_three import scarp_tg_existing_app
 from helper_funcs.step_four import create_new_tg_app
+from helper_funcs.step_five import parse_to_meaning_ful_text
 
 
 # Enable logging
@@ -40,7 +44,7 @@ GLOBAL_USERS_DICTIONARY = {}
 
 def start(update, context):
     update.message.reply_text(
-        Translation.START_TEXT,
+        Config.START_TEXT,
         parse_mode=ParseMode.HTML
     )
     return INPUT_PHONE_NUMBER
@@ -49,7 +53,9 @@ def start(update, context):
 def input_phone_number(update, context):
     user = update.message.from_user
     # logger.info("Received Input of %s: %s", user.first_name, update.message.text)
+    # receive the phone number entered
     input_text = update.message.text
+    # try logging in to my.telegram.org/apps
     random_hash = request_tg_code_get_random_hash(input_text)
     GLOBAL_USERS_DICTIONARY.update({
         user.id: {
@@ -57,8 +63,10 @@ def input_phone_number(update, context):
             "random_hash": random_hash
         }
     })
+    # save the random hash returned in a dictionary
+    # ask user for the **confidential** Telegram code
     update.message.reply_text(
-        Translation.AFTER_RECVD_CODE_TEXT,
+        Config.AFTER_RECVD_CODE_TEXT,
         parse_mode=ParseMode.HTML
     )
     return INPUT_TG_CODE
@@ -67,19 +75,28 @@ def input_phone_number(update, context):
 def input_tg_code(update, context):
     user = update.message.from_user
     # logger.info("Tg Code of %s: %s", user.first_name, update.message.text)
+    # get the saved values from the dictionary
     current_user_creds = GLOBAL_USERS_DICTIONARY.get(user.id)
+    # delete the key from the dictionary
     if user.id in GLOBAL_USERS_DICTIONARY:
         del GLOBAL_USERS_DICTIONARY[user.id]
-    aes_mesg_i = update.message.reply_text(Translation.BEFORE_SUCC_LOGIN)
+    # reply "processing" progress to user
+    # we will use this message to edit the status as required, later
+    aes_mesg_i = update.message.reply_text(Config.BEFORE_SUCC_LOGIN)
+    # login using provided code, and get cookie
     s, c = login_step_get_stel_cookie(
         current_user_creds.get("input_phone_number"),
         current_user_creds.get("random_hash"),
         update.message.text
     )
     if s:
+        # scrap the my.telegram.org/apps page
+        # and check if the user had previously created an app
         t, v = scarp_tg_existing_app(c)
         if not t:
-            logger.info(create_new_tg_app(
+            # if not created
+            # create an app by the provided details
+            create_new_tg_app(
                 c,
                 v.get("tg_app_hash"),
                 Config.APP_TITLE,
@@ -89,39 +106,30 @@ def input_tg_code(update, context):
                 # if you try to edit this
                 "other",
                 Config.APP_DESCRIPTION
-            ))
+            )
+        # now scrap the my.telegram.org/apps page
+        # it is guranteed that now the user will have an APP ID.
+        # if not, the stars have failed us
+        # and throw that error back to the user
         t, v = scarp_tg_existing_app(c)
         if t:
-            me_t = ""
-            me_t += "<i>App Configuration</i>"
-            me_t += "\n"
-            me_t += "<b>APP ID</b>: "
-            me_t += "<code>{}</code>".format(v["App Configuration"]["app_id"])
-            me_t += "\n"
-            me_t += "<b>API HASH</b>: "
-            me_t += "<code>{}</code>".format(v["App Configuration"]["api_hash"])
-            me_t += "\n"
-            me_t += "<i>Available MTProto Servers</i>"
-            me_t += "\n"
-            me_t += "<b>Production Configuration</b>: "
-            me_t += "<code>{}</code>".format(
-                v["Available MTProto Servers"]["production_configuration"]
-            )
-            me_t += "\n"
-            me_t += "<b>Test Configuration</b>: "
-            me_t += "<code>{}</code>".format(
-                v["Available MTProto Servers"]["test_configuration"]
-            )
+            # parse the scrapped page into an user readable
+            # message
+            me_t = parse_to_meaning_ful_text(v)
             me_t += "\n"
             me_t += "\n"
+            # add channel ads at the bottom, because why not?
             me_t += Config.FOOTER_TEXT
+            # and send to the user
             aes_mesg_i.edit_text(
                 text=me_t,
                 parse_mode=ParseMode.HTML
             )
         else:
-            aes_mesg_i.edit_text(Translation.ERRED_PAGE)
+            aes_mesg_i.edit_text(Config.ERRED_PAGE)
     else:
+        # return the Telegram error message to user,
+        # incase of incorrect LogIn
         aes_mesg_i.edit_text(c)
     return ConversationHandler.END
 
@@ -129,7 +137,7 @@ def input_tg_code(update, context):
 def cancel(update, context):
     user = update.message.from_user
     # logger.info("User %s canceled the conversation.", user.first_name)
-    update.message.reply_text(Translation.CANCELLED_MESG)
+    update.message.reply_text(Config.CANCELLED_MESG)
     return ConversationHandler.END
 
 
@@ -172,6 +180,7 @@ def main():
             port=Config.PORT,
             url_path=Config.TG_BOT_TOKEN
         )
+        # https://t.me/MarieOT/22915
         updater.bot.set_webhook(url=Config.URL + Config.TG_BOT_TOKEN)
     else:
         updater.start_polling()
