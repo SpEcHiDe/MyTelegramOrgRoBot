@@ -48,7 +48,7 @@ def start(update, context):
 
 def input_phone_number(update, context):
     user = update.message.from_user
-    logger.info("Received Input of %s: %s", user.first_name, update.message.text)
+    # logger.info("Received Input of %s: %s", user.first_name, update.message.text)
     input_text = update.message.text
     random_hash = request_tg_code_get_random_hash(input_text)
     GLOBAL_USERS_DICTIONARY.update({
@@ -66,7 +66,7 @@ def input_phone_number(update, context):
 
 def input_tg_code(update, context):
     user = update.message.from_user
-    logger.info("Tg Code of %s: %s", user.first_name, update.message.text)
+    # logger.info("Tg Code of %s: %s", user.first_name, update.message.text)
     current_user_creds = GLOBAL_USERS_DICTIONARY.get(user.id)
     if user.id in GLOBAL_USERS_DICTIONARY:
         del GLOBAL_USERS_DICTIONARY[user.id]
@@ -79,19 +79,42 @@ def input_tg_code(update, context):
     if s:
         t, v = scarp_tg_existing_app(c)
         if not t:
-            create_new_tg_app(
+            logger.info(create_new_tg_app(
                 c,
                 v.get("tg_app_hash"),
-                "usetgbot",
-                "usetgbot",
-                "https%3A%2F%2Ftelegram.dog%2FGetMyTGAppBot",
+                Config.APP_TITLE,
+                Config.APP_SHORT_NAME,
+                Config.APP_URL,
+                # awful bad things will happen
+                # if you try to edit this
                 "other",
-                "created+using+https%3A%2F%2Ftelegram.dog%2FGetMyTGAppBot"
-            )
+                Config.APP_DESCRIPTION
+            ))
         t, v = scarp_tg_existing_app(c)
         if t:
-            me_t = json.dumps(v, sort_keys=True, indent=4)
-            me_t += "\n\n❤️ @SpEcHlDe"
+            me_t = ""
+            me_t += "<i>App Configuration</i>"
+            me_t += "\n"
+            me_t += "<b>APP ID</b>: "
+            me_t += "<code>{}</code>".format(v["App Configuration"]["app_id"])
+            me_t += "\n"
+            me_t += "<b>API HASH</b>: "
+            me_t += "<code>{}</code>".format(v["App Configuration"]["api_hash"])
+            me_t += "\n"
+            me_t += "<i>Available MTProto Servers</i>"
+            me_t += "\n"
+            me_t += "<b>Production Configuration</b>: "
+            me_t += "<code>{}</code>".format(
+                v["Available MTProto Servers"]["production_configuration"]
+            )
+            me_t += "\n"
+            me_t += "<b>Test Configuration</b>: "
+            me_t += "<code>{}</code>".format(
+                v["Available MTProto Servers"]["test_configuration"]
+            )
+            me_t += "\n"
+            me_t += "\n"
+            me_t += Config.FOOTER_TEXT
             aes_mesg_i.edit_text(
                 text=me_t,
                 parse_mode=ParseMode.HTML
@@ -105,7 +128,7 @@ def input_tg_code(update, context):
 
 def cancel(update, context):
     user = update.message.from_user
-    logger.info("User %s canceled the conversation.", user.first_name)
+    # logger.info("User %s canceled the conversation.", user.first_name)
     update.message.reply_text(Translation.CANCELLED_MESG)
     return ConversationHandler.END
 
