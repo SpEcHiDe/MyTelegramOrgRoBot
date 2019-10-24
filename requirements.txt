@@ -1,4 +1,3 @@
 beautifulsoup4
-git+git://github.com/google/chatbase-python.git
 python-telegram-bot
 requests
