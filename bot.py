@@ -1,7 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# (c) Shrimadhav U K
+# Copyright (c) Shrimadhav U K
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+"""Telegram Bot"""
 
 import logging
 import os
@@ -15,18 +29,17 @@ from telegram.ext import (
     ConversationHandler
 )
 
-WEBHOOK =  bool(os.environ.get("WEBHOOK", False))
-if WEBHOOK:
-    from sample_config import Config
-else:
-    from config import Development as Config
-
-
 from helper_funcs.step_one import request_tg_code_get_random_hash
 from helper_funcs.step_two import login_step_get_stel_cookie
 from helper_funcs.step_three import scarp_tg_existing_app
 from helper_funcs.step_four import create_new_tg_app
 from helper_funcs.step_five import parse_to_meaning_ful_text
+
+WEBHOOK = bool(os.environ.get("WEBHOOK", False))
+if WEBHOOK:
+    from sample_config import Config
+else:
+    from config import Development as Config
 
 
 # Enable logging
@@ -35,7 +48,7 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 INPUT_PHONE_NUMBER, INPUT_TG_CODE = range(2)
@@ -43,6 +56,7 @@ GLOBAL_USERS_DICTIONARY = {}
 
 
 def start(update, context):
+    """ ConversationHandler entry_point /start """
     update.message.reply_text(
         Config.START_TEXT,
         parse_mode=ParseMode.HTML
@@ -51,8 +65,9 @@ def start(update, context):
 
 
 def input_phone_number(update, context):
+    """ ConversationHandler INPUT_PHONE_NUMBER state """
     user = update.message.from_user
-    # logger.info("Received Input of %s: %s", user.first_name, update.message.text)
+    # LOGGER.info("Received Input of %s: %s", user.first_name, update.message.text)
     # receive the phone number entered
     input_text = update.message.text
     # try logging in to my.telegram.org/apps
@@ -73,8 +88,9 @@ def input_phone_number(update, context):
 
 
 def input_tg_code(update, context):
+    """ ConversationHandler INPUT_TG_CODE state """
     user = update.message.from_user
-    # logger.info("Tg Code of %s: %s", user.first_name, update.message.text)
+    # LOGGER.info("Tg Code of %s: %s", user.first_name, update.message.text)
     # get the saved values from the dictionary
     current_user_creds = GLOBAL_USERS_DICTIONARY.get(user.id)
     # delete the key from the dictionary
@@ -84,21 +100,21 @@ def input_tg_code(update, context):
     # we will use this message to edit the status as required, later
     aes_mesg_i = update.message.reply_text(Config.BEFORE_SUCC_LOGIN)
     # login using provided code, and get cookie
-    s, c = login_step_get_stel_cookie(
+    status_r, cookie_v = login_step_get_stel_cookie(
         current_user_creds.get("input_phone_number"),
         current_user_creds.get("random_hash"),
         update.message.text
     )
-    if s:
+    if status_r:
         # scrap the my.telegram.org/apps page
         # and check if the user had previously created an app
-        t, v = scarp_tg_existing_app(c)
-        if not t:
+        status_t, response_dv = scarp_tg_existing_app(cookie_v)
+        if not status_t:
             # if not created
             # create an app by the provided details
             create_new_tg_app(
-                c,
-                v.get("tg_app_hash"),
+                cookie_v,
+                response_dv.get("tg_app_hash"),
                 Config.APP_TITLE,
                 Config.APP_SHORT_NAME,
                 Config.APP_URL,
@@ -111,11 +127,11 @@ def input_tg_code(update, context):
         # it is guranteed that now the user will have an APP ID.
         # if not, the stars have failed us
         # and throw that error back to the user
-        t, v = scarp_tg_existing_app(c)
-        if t:
+        status_t, response_dv = scarp_tg_existing_app(cookie_v)
+        if status_t:
             # parse the scrapped page into an user readable
             # message
-            me_t = parse_to_meaning_ful_text(v)
+            me_t = parse_to_meaning_ful_text(response_dv)
             me_t += "\n"
             me_t += "\n"
             # add channel ads at the bottom, because why not?
@@ -130,34 +146,36 @@ def input_tg_code(update, context):
     else:
         # return the Telegram error message to user,
         # incase of incorrect LogIn
-        aes_mesg_i.edit_text(c)
+        aes_mesg_i.edit_text(cookie_v)
     return ConversationHandler.END
 
 
 def cancel(update, context):
-    user = update.message.from_user
-    # logger.info("User %s canceled the conversation.", user.first_name)
+    """ ConversationHandler /cancel state """
+    # user = update.message.from_user
+    # LOGGER.info("User %s canceled the conversation.", user.first_name)
     update.message.reply_text(Config.CANCELLED_MESG)
     return ConversationHandler.END
 
 
 def error(update, context):
     """Log Errors caused by Updates."""
-    logger.warning('Update "%s" caused error "%s"', update, context.error)
+    LOGGER.warning("Update %s caused error %s", update, context.error)
 
 
 def main():
+    """ Initial Entry Point """
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
     # Post version 12 this will no longer be necessary
     updater = Updater(Config.TG_BOT_TOKEN, use_context=True)
 
     # Get the dispatcher to register handlers
-    dp = updater.dispatcher
+    tg_bot_dis_patcher = updater.dispatcher
 
     # Add conversation handler with the states
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start)],
+        entry_points=[CommandHandler("start", start)],
 
         states={
             INPUT_PHONE_NUMBER: [MessageHandler(Filters.text, input_phone_number)],
@@ -165,13 +183,13 @@ def main():
             INPUT_TG_CODE: [MessageHandler(Filters.text, input_tg_code)]
         },
 
-        fallbacks=[CommandHandler('cancel', cancel)]
+        fallbacks=[CommandHandler("cancel", cancel)]
     )
 
-    dp.add_handler(conv_handler)
+    tg_bot_dis_patcher.add_handler(conv_handler)
 
     # log all errors
-    dp.add_error_handler(error)
+    tg_bot_dis_patcher.add_error_handler(error)
 
     # Start the Bot
     if WEBHOOK:
@@ -191,5 +209,5 @@ def main():
     updater.idle()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
