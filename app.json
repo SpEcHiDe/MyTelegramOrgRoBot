@@ -20,14 +20,14 @@
       "description": "Your bot token, as a string.",
       "value": ""
     },
-    "HTTP_DOMAIN": {
+    "URL": {
       "description": "The Heroku App URL similar to https://<appname>.herokuapp.com/",
       "value": "https://example.com/"
     },
     "PORT": {
       "description": "Port to use for your webhooks",
       "value": "5000"
-    },
+    }
   },
   "formation": {
     "worker": {
