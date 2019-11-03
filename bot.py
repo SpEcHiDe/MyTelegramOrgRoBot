@@ -165,7 +165,7 @@ def main():
             INPUT_TG_CODE: [MessageHandler(Filters.text, input_tg_code)]
         },
 
-        fallbacks=[CommandHandler('cancel', cancel)]
+        fallbacks=[CommandHandler('start', start)]
     )
 
     dp.add_handler(conv_handler)
