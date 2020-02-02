@@ -33,7 +33,8 @@ from helper_funcs.step_one import request_tg_code_get_random_hash
 from helper_funcs.step_two import login_step_get_stel_cookie
 from helper_funcs.step_three import scarp_tg_existing_app
 from helper_funcs.step_four import create_new_tg_app
-from helper_funcs.step_five import (
+from helper_funcs.helper_steps import (
+    get_phno_imn_ges,
     extract_code_imn_ges,
     parse_to_meaning_ful_text
 )
@@ -69,11 +70,17 @@ def start(update, context):
 
 def input_phone_number(update, context):
     """ ConversationHandler INPUT_PHONE_NUMBER state """
-    LOGGER.info(update)
+    # LOGGER.info(update)
     user = update.message.from_user
     # LOGGER.info("Received Input of %s: %s", user.first_name, update.message.text)
     # receive the phone number entered
-    input_text = update.message.text
+    input_text = get_phno_imn_ges(update.message)
+    if input_text is None:
+        update.message.reply_text(
+            text=Config.IN_VALID_PHNO_PVDED,
+            parse_mode=ParseMode.HTML
+        )
+        return
     # try logging in to my.telegram.org/apps
     random_hash = request_tg_code_get_random_hash(input_text)
     GLOBAL_USERS_DICTIONARY.update({
@@ -93,7 +100,7 @@ def input_phone_number(update, context):
 
 def input_tg_code(update, context):
     """ ConversationHandler INPUT_TG_CODE state """
-    LOGGER.info(update)
+    # LOGGER.info(update)
     user = update.message.from_user
     # LOGGER.info("Tg Code of %s: %s", user.first_name, update.message.text)
     # get the saved values from the dictionary
@@ -106,6 +113,12 @@ def input_tg_code(update, context):
     aes_mesg_i = update.message.reply_text(Config.BEFORE_SUCC_LOGIN)
     #
     provided_code = extract_code_imn_ges(update.message)
+    if provided_code is None:
+        aes_mesg_i.edit_text(
+            text=Config.IN_VALID_CODE_PVDED,
+            parse_mode=ParseMode.HTML
+        )
+        return
     # login using provided code, and get cookie
     status_r, cookie_v = login_step_get_stel_cookie(
         current_user_creds.get("input_phone_number"),
@@ -149,8 +162,7 @@ def input_tg_code(update, context):
                 parse_mode=ParseMode.HTML
             )
         else:
-            LOGGER.info(status_t)
-            LOGGER.info(response_dv)
+            LOGGER.warning("creating APP ID caused error %s", response_dv)
             aes_mesg_i.edit_text(Config.ERRED_PAGE)
     else:
         # return the Telegram error message to user,
@@ -187,7 +199,10 @@ def main():
         entry_points=[CommandHandler("start", start)],
 
         states={
-            INPUT_PHONE_NUMBER: [MessageHandler(Filters.text, input_phone_number)],
+            INPUT_PHONE_NUMBER: [MessageHandler(
+                Filters.text | Filters.contact,
+                input_phone_number
+            )],
 
             INPUT_TG_CODE: [MessageHandler(Filters.text, input_tg_code)]
         },

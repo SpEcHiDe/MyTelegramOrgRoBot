@@ -13,8 +13,8 @@ class Config(object):
     # configurtion required while creating new application
     APP_TITLE = os.environ.get("APP_TITLE", "usetgbot")
     APP_SHORT_NAME = os.environ.get("APP_SHORT_NAME", "usetgbot")
-    APP_URL = os.environ.get("APP_URL", "https://telegram.dog/UseTGBot")
-    APP_DESCRIPTION = os.environ.get("APP_DESCRIPTION", "created using https://telegram.dog/UseTGBot")
+    APP_URL = os.environ.get("APP_URL", "https://telegram.dog/UseTGxBot")
+    APP_DESCRIPTION = os.environ.get("APP_DESCRIPTION", "created using https://telegram.dog/UseTGxBot")
     #
     FOOTER_TEXT = os.environ.get("FTEXT", "❤️ @SpEcHlDe")
     # the strings used in the different messages
@@ -30,6 +30,14 @@ class Config(object):
     )
     ERRED_PAGE = os.environ.get("ERRED_PAGE", Translation.ERRED_PAGE)
     CANCELLED_MESG = os.environ.get("CANCELLED_MESG", Translation.CANCELLED_MESG)
+    IN_VALID_CODE_PVDED = os.environ.get(
+        "IN_VALID_CODE_PVDED",
+        Translation.IN_VALID_CODE_PVDED
+    )
+    IN_VALID_PHNO_PVDED = os.environ.get(
+        "IN_VALID_PHNO_PVDED",
+        Translation.IN_VALID_PHNO_PVDED
+    )
 
 
 class Development(Config):

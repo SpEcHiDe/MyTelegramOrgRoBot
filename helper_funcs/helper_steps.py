@@ -89,3 +89,22 @@ def extract_code_imn_ges(ptb_message):
     else:
         telegram__web_login_code = incoming_message_text
     return telegram__web_login_code
+
+
+def get_phno_imn_ges(ptb_message):
+    """ gets the phone number (in international format),
+    from the input message"""
+    LOGGER.info(ptb_message)
+    my_telegram_ph_no = None
+    if ptb_message.text is not None:
+        if len(ptb_message.entities) > 0:
+            for c_entity in ptb_message.entities:
+                if c_entity.type == "phone_number":
+                    my_telegram_ph_no = ptb_message.text[c_entity.offset:c_entity.length]
+        else:
+            my_telegram_ph_no = ptb_message.text
+    elif ptb_message.contact is not None:
+        # https://archive.is/X4gsK
+        if ptb_message.contact.phone_number != "":
+            my_telegram_ph_no = ptb_message.contact.phone_number
+    return my_telegram_ph_no
