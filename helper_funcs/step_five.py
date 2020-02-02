@@ -41,4 +41,10 @@ def parse_to_meaning_ful_text(in_dict):
     me_t += "<code>{}</code>".format(
         in_dict["Available MTProto Servers"]["test_configuration"]
     )
+    me_t += "\n"
+    me_t += "\n"
+    me_t += "<i>Disclaimer</i>: "
+    me_t += "<u>{}</u>".format(
+        in_dict["Disclaimer"]
+    )
     return me_t
