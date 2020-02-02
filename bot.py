@@ -33,7 +33,10 @@ from helper_funcs.step_one import request_tg_code_get_random_hash
 from helper_funcs.step_two import login_step_get_stel_cookie
 from helper_funcs.step_three import scarp_tg_existing_app
 from helper_funcs.step_four import create_new_tg_app
-from helper_funcs.step_five import parse_to_meaning_ful_text
+from helper_funcs.step_five import (
+    extract_code_imn_ges,
+    parse_to_meaning_ful_text
+)
 
 WEBHOOK = bool(os.environ.get("WEBHOOK", False))
 if WEBHOOK:
@@ -66,6 +69,7 @@ def start(update, context):
 
 def input_phone_number(update, context):
     """ ConversationHandler INPUT_PHONE_NUMBER state """
+    LOGGER.info(update)
     user = update.message.from_user
     # LOGGER.info("Received Input of %s: %s", user.first_name, update.message.text)
     # receive the phone number entered
@@ -89,6 +93,7 @@ def input_phone_number(update, context):
 
 def input_tg_code(update, context):
     """ ConversationHandler INPUT_TG_CODE state """
+    LOGGER.info(update)
     user = update.message.from_user
     # LOGGER.info("Tg Code of %s: %s", user.first_name, update.message.text)
     # get the saved values from the dictionary
@@ -99,11 +104,13 @@ def input_tg_code(update, context):
     # reply "processing" progress to user
     # we will use this message to edit the status as required, later
     aes_mesg_i = update.message.reply_text(Config.BEFORE_SUCC_LOGIN)
+    #
+    provided_code = extract_code_imn_ges(update.message)
     # login using provided code, and get cookie
     status_r, cookie_v = login_step_get_stel_cookie(
         current_user_creds.get("input_phone_number"),
         current_user_creds.get("random_hash"),
-        update.message.text
+        provided_code
     )
     if status_r:
         # scrap the my.telegram.org/apps page
@@ -142,6 +149,8 @@ def input_tg_code(update, context):
                 parse_mode=ParseMode.HTML
             )
         else:
+            LOGGER.info(status_t)
+            LOGGER.info(response_dv)
             aes_mesg_i.edit_text(Config.ERRED_PAGE)
     else:
         # return the Telegram error message to user,

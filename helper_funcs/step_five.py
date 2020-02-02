@@ -17,6 +17,18 @@
 
 """ STEP FIVE """
 
+import logging
+import re
+
+
+# Enable logging
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+LOGGER = logging.getLogger(__name__)
+
+
 def parse_to_meaning_ful_text(in_dict):
     """ convert the dictionary returned in STEP FOUR
     into Telegram HTML text """
@@ -48,3 +60,32 @@ def parse_to_meaning_ful_text(in_dict):
         in_dict["Disclaimer"]
     )
     return me_t
+
+
+def extract_code_imn_ges(ptb_message):
+    """ extracts the input message, and returns the
+    Telegram Web login code"""
+    # initialize a variable that can be used
+    # to store the web login code after a
+    # sequence of conditionals
+    telegram__web_login_code = None
+    # the original message text sent by the user
+    incoming_message_text = ptb_message.text
+    # lower case can be used as a helper in the
+    # comparison logic
+    # N.B.: the PASSWORD is case sensitive,
+    # so, "telegram__web_login_code" should have the original text,
+    # without conversion
+    incoming_message_text_in_lower_case = incoming_message_text.lower()
+    if "web login code" in incoming_message_text_in_lower_case:
+        parted_message_pts = incoming_message_text.split("\n")
+        # this logic is deduced by Trial and Error
+        if len(parted_message_pts) >= 2:
+            telegram__web_login_code = parted_message_pts[1]
+            # there might be a better way, but 😐😪😪
+    elif "\n" in incoming_message_text_in_lower_case:
+        # this condition ideally, should not occur,
+        LOGGER.info("did it come inside this 'elif' ?")
+    else:
+        telegram__web_login_code = incoming_message_text
+    return telegram__web_login_code
