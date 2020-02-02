@@ -80,7 +80,7 @@ def input_phone_number(update, context):
             text=Config.IN_VALID_PHNO_PVDED,
             parse_mode=ParseMode.HTML
         )
-        return
+        return INPUT_PHONE_NUMBER
     # try logging in to my.telegram.org/apps
     random_hash = request_tg_code_get_random_hash(input_text)
     GLOBAL_USERS_DICTIONARY.update({
@@ -118,7 +118,7 @@ def input_tg_code(update, context):
             text=Config.IN_VALID_CODE_PVDED,
             parse_mode=ParseMode.HTML
         )
-        return
+        return INPUT_PHONE_NUMBER
     # login using provided code, and get cookie
     status_r, cookie_v = login_step_get_stel_cookie(
         current_user_creds.get("input_phone_number"),
