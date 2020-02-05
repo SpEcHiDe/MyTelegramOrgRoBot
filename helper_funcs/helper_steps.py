@@ -29,10 +29,14 @@ logging.basicConfig(
 LOGGER = logging.getLogger(__name__)
 
 
-def parse_to_meaning_ful_text(in_dict):
+def parse_to_meaning_ful_text(input_phone_number, in_dict):
     """ convert the dictionary returned in STEP FOUR
     into Telegram HTML text """
     me_t = ""
+    me_t += "<i>Phone Number</i>: "
+    me_t += f"<u>{input_phone_number}</u>"
+    me_t += "\n"
+    me_t += "\n"
     me_t += "<i>App Configuration</i>"
     me_t += "\n"
     me_t += "<b>APP ID</b>: "

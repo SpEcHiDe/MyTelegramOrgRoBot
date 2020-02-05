@@ -151,7 +151,10 @@ def input_tg_code(update, context):
         if status_t:
             # parse the scrapped page into an user readable
             # message
-            me_t = parse_to_meaning_ful_text(response_dv)
+            me_t = parse_to_meaning_ful_text(
+                current_user_creds.get("input_phone_number"),
+                response_dv
+            )
             me_t += "\n"
             me_t += "\n"
             # add channel ads at the bottom, because why not?
