@@ -140,9 +140,7 @@ def input_tg_code(update, context):
                 Config.APP_TITLE,
                 Config.APP_SHORT_NAME,
                 Config.APP_URL,
-                # awful bad things will happen
-                # if you try to edit this
-                "other",
+                Config.APP_PLATFORM,
                 Config.APP_DESCRIPTION
             )
         # now scrap the my.telegram.org/apps page

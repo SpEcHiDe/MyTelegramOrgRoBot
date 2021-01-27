@@ -17,6 +17,7 @@
 
 """ STEP FOUR """
 
+import random
 import requests
 
 
@@ -41,7 +42,7 @@ def create_new_tg_app(
         "app_title": app_title,
         "app_shortname": app_shortname,
         "app_url": app_url,
-        "app_platform": app_platform,
+        "app_platform": random.choice(app_platform),
         "app_desc": app_desc
     }
     response_c = requests.post(

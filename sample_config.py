@@ -15,6 +15,21 @@ class Config:
     APP_TITLE = os.environ.get("APP_TITLE", "usetgbot")
     APP_SHORT_NAME = os.environ.get("APP_SHORT_NAME", "usetgbot")
     APP_URL = os.environ.get("APP_URL", "https://telegram.dog/UseTGxBot")
+    # these platform informations were obtained
+    # on 27.01.2020 21:15:50 IST
+    APP_PLATFORM = [
+        "android",
+        "ios",
+        "wp",
+        "bb",
+        "desktop",
+        "web",
+        "ubp",
+        "other"
+    ]
+    # if any of the platform, does not work
+    # please reopen
+    # https://github.com/SpEcHiDe/MyTelegramOrgRoBot/issues/3
     APP_DESCRIPTION = os.environ.get(
         "APP_DESCRIPTION",
         "created using https://telegram.dog/UseTGxBot"
