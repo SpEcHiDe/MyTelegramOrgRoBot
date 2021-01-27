@@ -46,17 +46,29 @@ def scarp_tg_existing_app(stel_token):
         test_configuration = g_inputs[4].string
         production_configuration = g_inputs[5].string
         # It is forbidden to pass this value to third parties.
+        _a = "It is forbidden to pass this value to third parties."
+        #
+        hi_inputs = soup.find_all("p", {"class": "help-block"})
+        test_dc = hi_inputs[-2].text.strip()
+        production_dc = hi_inputs[-1].text.strip()
         re_dict_vals = {
             "App Configuration": {
                 "app_id": app_id,
                 "api_hash": api_hash
             },
             "Available MTProto Servers": {
-                "test_configuration": test_configuration,
-                "production_configuration": production_configuration
+                "test_configuration": {
+                    "IP": test_configuration,
+                    "DC": test_dc
+                },
+                "production_configuration": {
+                    "IP": production_configuration,
+                    "DC": production_dc
+                }
             },
-            "Disclaimer": "It is forbidden to pass this value to third parties."
+            "Disclaimer": _a
         }
+        #
         re_status_id = True
     else:
         tg_app_hash = soup.find("input", {"name": "hash"}).get("value")

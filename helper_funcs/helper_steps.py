@@ -48,13 +48,15 @@ def parse_to_meaning_ful_text(input_phone_number, in_dict):
     me_t += "<i>Available MTProto Servers</i>"
     me_t += "\n"
     me_t += "<b>Production Configuration</b>: "
-    me_t += "<code>{}</code>".format(
-        in_dict["Available MTProto Servers"]["production_configuration"]
+    me_t += "<code>{}</code> <u>{}</u>".format(
+        in_dict["Available MTProto Servers"]["production_configuration"]["IP"],
+        in_dict["Available MTProto Servers"]["production_configuration"]["DC"]
     )
     me_t += "\n"
     me_t += "<b>Test Configuration</b>: "
-    me_t += "<code>{}</code>".format(
-        in_dict["Available MTProto Servers"]["test_configuration"]
+    me_t += "<code>{}</code> <u>{}</u>".format(
+        in_dict["Available MTProto Servers"]["test_configuration"]["IP"],
+        in_dict["Available MTProto Servers"]["test_configuration"]["DC"]
     )
     me_t += "\n"
     me_t += "\n"
