@@ -18,7 +18,6 @@
 """ STEP FIVE """
 
 import logging
-import re
 
 
 # Enable logging
@@ -104,7 +103,9 @@ def get_phno_imn_ges(ptb_message):
         if len(ptb_message.entities) > 0:
             for c_entity in ptb_message.entities:
                 if c_entity.type == "phone_number":
-                    my_telegram_ph_no = ptb_message.text[c_entity.offset:c_entity.length]
+                    my_telegram_ph_no = ptb_message.text[
+                        c_entity.offset:c_entity.length
+                    ]
         else:
             my_telegram_ph_no = ptb_message.text
     elif ptb_message.contact is not None:

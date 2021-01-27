@@ -29,7 +29,7 @@ def create_new_tg_app(
         app_platform,
         app_desc
 ):
-    #pylint: disable-msg=too-many-arguments
+    # pylint: disable-msg=too-many-arguments
     """ creates a new my.telegram.org/apps
     using the provided parameters """
     request_url = "https://my.telegram.org/apps/create"
