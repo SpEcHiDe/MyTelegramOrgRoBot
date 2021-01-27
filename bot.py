@@ -72,7 +72,9 @@ def input_phone_number(update, context):
     """ ConversationHandler INPUT_PHONE_NUMBER state """
     # LOGGER.info(update)
     user = update.message.from_user
-    # LOGGER.info("Received Input of %s: %s", user.first_name, update.message.text)
+    # LOGGER.info(
+    #   "Received Input of %s: %s", user.first_name, update.message.text
+    # )
     # receive the phone number entered
     input_text = get_phno_imn_ges(update.message)
     if input_text is None:

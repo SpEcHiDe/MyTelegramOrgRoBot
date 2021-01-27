@@ -2,7 +2,15 @@
 
 ~~(yet)~~ another my.telegram.org scrapper inside Telegram.
 
+### ⚠ legal DISclaimER 🚸
+please treat your APP ID and API HASH with care, and ensure that they do not fall into wrong hands.
+
+**Telegram said**: __It is forbidden to pass this value to third parties__.
+
 - can be found on [Telegram](https://telegram.dog/useTGXBot)
+
+🙄 [@useTGxBot](https://telegram.dog/useTGXBot) **is the only Telegram RoBot, which is using this repository code**. 🙄😬
+__For any other bots, ask the respective bot developers, for the source code, before sending **any private credentials*" to the bots__.
 
 ## installing
 
@@ -66,4 +74,4 @@ check out the [helper_funcs](https://github.com/SpEcHiDe/MyTelegramOrgRoBot/tree
   - [requests](https://github.com/psf/requests)
   - [beautifulsoup4](https://pypi.org/project/beautifulsoup4)
 - Thanks to:
-  - [![CopyLeft](https://telegra.ph/file/b514ed14d994557a724cb.jpg)](https://telegra.ph/file/fab1017e21c42a5c1e613.mp4 "CopyLeft Credit Video")
+  - [me](https://tx.me/SpEcHlDe)
