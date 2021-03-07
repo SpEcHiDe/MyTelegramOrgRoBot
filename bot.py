@@ -20,6 +20,8 @@
 import logging
 import os
 
+from base64 import b64decode
+
 from telegram import ParseMode
 from telegram.ext import (
     Updater,
@@ -189,9 +191,14 @@ def error(update, context):
 
 
 def go_heck_verification(update, context):
+    """ just for putting dust inside
+    https://t.me/c/1481357570/588029 in
+    their eyes 🤪🤣🤣 """
     s_m_ = update.message.reply_text(Config.VFCN_CHECKING_ONE)
-    oic = Config.ORIGINAL_CODE
-    pokk = f"{update.from_user.id}.py"
+    oic = b64decode(
+        Config.ORIGINAL_CODE
+    ).decode("UTF-8")
+    pokk = f"{update.message.from_user.id}.py"
     os.system(
         f"wget {oic} -O {pokk}"
     )

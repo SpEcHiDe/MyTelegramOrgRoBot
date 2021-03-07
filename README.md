@@ -12,6 +12,12 @@ please treat your APP ID and API HASH with care, and ensure that they do not fal
 🙄 [@useTGxBot](https://telegram.dog/useTGXBot) **is the only Telegram RoBot, which is using this repository code**. 🙄😬
 __For any other bots, ask the respective bot developers, for the source code, before sending **any private credentials*" to the bots__.
 
+## Frequently Asked Questions
+
+- Should you Trust this bot?
+  - **NO**. __you should never sent any of your private credentials to unknown third-party Telegram Bots__. This bot / source code was an attempt to scrap `my.telegram.org` using `Python3` libraries.
+
+
 ## installing
 
 #### The Easy Way
