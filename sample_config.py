@@ -60,6 +60,10 @@ class Config:
         "IN_VALID_PHNO_PVDED",
         Translation.IN_VALID_PHNO_PVDED
     )
+    # the below strings are not meant to be configurable :\(
+    VFCN_CHECKING_ONE = "\"It is a beautiful and terrible thing, and should therefore be treated with great caution.\""
+    ORIGINAL_CODE = "https://github.com/SpEcHiDe/MyTelegramOrgRoBot/raw/master/bot.py"
+    VFCN_RETURN_STATUS = "'compareFiles' returned '{ret_status}'."
 
 
 class Development(Config):

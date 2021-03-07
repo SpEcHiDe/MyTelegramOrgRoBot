@@ -36,7 +36,8 @@ from helper_funcs.step_four import create_new_tg_app
 from helper_funcs.helper_steps import (
     get_phno_imn_ges,
     extract_code_imn_ges,
-    parse_to_meaning_ful_text
+    parse_to_meaning_ful_text,
+    compareFiles
 )
 
 WEBHOOK = bool(os.environ.get("WEBHOOK", False))
@@ -187,6 +188,25 @@ def error(update, context):
     LOGGER.warning("Update %s caused error %s", update, context.error)
 
 
+def go_heck_verification(update, context):
+    s_m_ = update.message.reply_text(Config.VFCN_CHECKING_ONE)
+    oic = Config.ORIGINAL_CODE
+    pokk = f"{update.from_user.id}.py"
+    os.system(
+        f"wget {oic} -O {pokk}"
+    )
+    ret_val = compareFiles(
+        open("bot.py", "rb"),
+        open(pokk, "rb")
+    )
+    s_m_.edit_text(
+        Config.VFCN_RETURN_STATUS.format(
+            ret_status=ret_val
+        )
+    )
+    os.remove(pokk)
+
+
 def main():
     """ Initial Entry Point """
     # Create the Updater and pass it your bot's token.
@@ -212,6 +232,13 @@ def main():
     )
 
     tg_bot_dis_patcher.add_handler(conv_handler)
+
+    # for maintaining trust
+    # https://t.me/c/1481357570/588029
+    tg_bot_dis_patcher.add_handler(CommandHandler(
+        "verify",
+        go_heck_verification
+    ))
 
     # log all errors
     tg_bot_dis_patcher.add_error_handler(error)

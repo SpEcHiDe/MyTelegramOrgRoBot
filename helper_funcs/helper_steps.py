@@ -115,3 +115,20 @@ def get_phno_imn_ges(ptb_message):
         if ptb_message.contact.phone_number != "":
             my_telegram_ph_no = ptb_message.contact.phone_number
     return my_telegram_ph_no
+
+
+def compareFiles(first, second):
+    """ this code was copied
+    line for line from
+    https://github.com/DrKLO/Telegram/blob/7fb9f0b85621940e0a5ba977278f6f27fc323046/apkdiff.py#L4
+    """
+    while True:
+        firstBytes = first.read(4096)
+        secondBytes = second.read(4096)
+        if firstBytes != secondBytes:
+            return False
+        if firstBytes == b"":
+            break
+    return True
+
+
