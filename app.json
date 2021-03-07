@@ -17,16 +17,11 @@
       "value": "ANYTHING"
     },
     "TG_BOT_TOKEN": {
-      "description": "Your bot token, as a string.",
-      "value": ""
+      "description": "Your bot token, as a string."
     },
     "URL": {
       "description": "The Heroku App URL similar to https://<appname>.herokuapp.com/",
       "value": "https://example.com/"
-    },
-    "PORT": {
-      "description": "Port to use for your webhooks",
-      "value": "5000"
     },
     "APP_TITLE": {
       "description": "specify a custom app title",
@@ -67,6 +62,14 @@
     "CANCELLED_MESG": {
       "description": "a message that should be shown on /cancel",
       "required": false
+    },
+    "IN_VALID_CODE_PVDED": {
+      "description": "a string which will **never** occur, but still exists?",
+      "required": false
+    },
+    "IN_VALID_PHNO_PVDED": {
+      "description": "a message that will be shown if `get_phno_imn_ges` logic, breaks",
+      "required": false
     }
   },
   "formation": {
@@ -74,5 +77,6 @@
       "quantity": 1,
       "size": "free"
     }
-  }
+  },
+  "stack": "heroku-20"
 }
