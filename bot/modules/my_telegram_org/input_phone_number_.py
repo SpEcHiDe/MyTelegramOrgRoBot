@@ -29,7 +29,9 @@ from bot import (
 from bot.helper_funcs.helper_steps import (
     get_phno_imn_ges
 )
-from bot.helper_funcs.step_one import request_tg_code_get_random_hash
+from bot.helper_funcs.my_telegram_org.step_one import (
+    request_tg_code_get_random_hash
+)
 
 
 def input_phone_number(update: Update, context):

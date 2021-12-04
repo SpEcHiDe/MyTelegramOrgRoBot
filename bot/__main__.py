@@ -18,6 +18,7 @@
 
 from telegram.ext import (
     Updater,
+    # CallbackQueryHandler,
     CommandHandler,
     MessageHandler,
     Filters,
@@ -29,10 +30,10 @@ from bot import (
     INPUT_TG_CODE
 )
 from bot.modules.start_text_ import start
-from bot.modules.input_phone_number_ import (
+from bot.modules.my_telegram_org.input_phone_number_ import (
     input_phone_number
 )
-from bot.modules.input_tg_code_ import (
+from bot.modules.my_telegram_org.input_tg_code_ import (
     input_tg_code
 )
 
@@ -46,7 +47,13 @@ tg_bot_dis_patcher = updater.dispatcher
 
 # Add conversation handler with the states
 conv_handler = ConversationHandler(
-    entry_points=[CommandHandler("start", start)],
+    entry_points=[
+        CommandHandler("start", start),
+
+        # CallbackQueryHandler(t_ele_thon_btn_, pattern="telethon"),
+
+        # CallbackQueryHandler(p_yro_gram_btn_, pattern="pyrogram"),
+    ],
 
     states={
         INPUT_PHONE_NUMBER: [MessageHandler(
@@ -57,7 +64,7 @@ conv_handler = ConversationHandler(
         INPUT_TG_CODE: [MessageHandler(
             Filters.text,
             input_tg_code
-        )]
+        )],
     },
 
     fallbacks=[CommandHandler('start', start)]
@@ -81,6 +88,12 @@ if Config.WEBHOOK:
     )
 else:
     updater.start_polling()
+
+print(
+    """
+Bot Started: Join @SpEcHlDe (https://tx.me/SpEcHlDe)
+    """
+)
 
 # Run the bot until you press Ctrl-C or the process receives SIGINT,
 # SIGTERM or SIGABRT. This should be used most of the time, since
