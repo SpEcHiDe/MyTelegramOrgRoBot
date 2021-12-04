@@ -1,4 +1,4 @@
-class Translation(object):
+class Translation:
     START_TEXT = """Hi!
 please read the TnC before proceeding: https://t.me/SpEcHlDe/889
 Thank you for using me 😬

@@ -20,7 +20,7 @@
 import requests
 
 
-def request_tg_code_get_random_hash(input_phone_number):
+def request_tg_code_get_random_hash(input_phone_number: str) -> str:
     """ requests Login Code
     and returns a random_hash
     which is used in STEP TWO """

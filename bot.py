@@ -22,7 +22,7 @@ import os
 
 from base64 import b64decode
 
-from telegram import ParseMode
+from telegram import ParseMode, Update
 from telegram.ext import (
     Updater,
     CommandHandler,
@@ -62,7 +62,7 @@ INPUT_PHONE_NUMBER, INPUT_TG_CODE = range(2)
 GLOBAL_USERS_DICTIONARY = {}
 
 
-def start(update, context):
+def start(update: Update, context):
     """ ConversationHandler entry_point /start """
     update.message.reply_text(
         Config.START_TEXT,
@@ -71,7 +71,7 @@ def start(update, context):
     return INPUT_PHONE_NUMBER
 
 
-def input_phone_number(update, context):
+def input_phone_number(update: Update, context):
     """ ConversationHandler INPUT_PHONE_NUMBER state """
     # LOGGER.info(update)
     user = update.message.from_user
@@ -103,7 +103,7 @@ def input_phone_number(update, context):
     return INPUT_TG_CODE
 
 
-def input_tg_code(update, context):
+def input_tg_code(update: Update, context):
     """ ConversationHandler INPUT_TG_CODE state """
     # LOGGER.info(update)
     user = update.message.from_user
@@ -177,7 +177,7 @@ def input_tg_code(update, context):
     return ConversationHandler.END
 
 
-def cancel(update, context):
+def cancel(update: Update, context):
     """ ConversationHandler /cancel state """
     # user = update.message.from_user
     # LOGGER.info("User %s canceled the conversation.", user.first_name)
@@ -185,12 +185,12 @@ def cancel(update, context):
     return ConversationHandler.END
 
 
-def error(update, context):
+def error(update: Update, context):
     """Log Errors caused by Updates."""
     LOGGER.warning("Update %s caused error %s", update, context.error)
 
 
-def go_heck_verification(update, context):
+def go_heck_verification(update: Update, context):
     """ just for putting dust inside
     https://t.me/c/1481357570/588029 in
     their eyes 🤪🤣🤣 """
@@ -257,8 +257,10 @@ def main():
             port=Config.PORT,
             url_path=Config.TG_BOT_TOKEN
         )
-        # https://t.me/MarieOT/22915
-        updater.bot.set_webhook(url=Config.URL + Config.TG_BOT_TOKEN)
+        # https://t.me/c/1186975633/22915
+        updater.bot.set_webhook(
+            url=Config.URL + Config.TG_BOT_TOKEN
+        )
     else:
         updater.start_polling()
 

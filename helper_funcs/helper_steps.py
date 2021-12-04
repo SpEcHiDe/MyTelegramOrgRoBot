@@ -130,5 +130,3 @@ def compareFiles(first, second):
         if firstBytes == b"":
             break
     return True
-
-

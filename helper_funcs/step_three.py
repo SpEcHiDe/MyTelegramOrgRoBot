@@ -19,9 +19,10 @@
 
 import requests
 from bs4 import BeautifulSoup
+from typing import Tuple, Dict
 
 
-def scarp_tg_existing_app(stel_token):
+def scarp_tg_existing_app(stel_token: str) -> Tuple[bool, Dict]:
     """scraps the web page using the provided cookie,
     returns True or False appropriately"""
     request_url = "https://my.telegram.org/apps"

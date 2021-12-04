@@ -22,13 +22,13 @@ import requests
 
 
 def create_new_tg_app(
-        stel_token,
-        tg_app_hash,
-        app_title,
-        app_shortname,
-        app_url,
-        app_platform,
-        app_desc
+    stel_token: str,
+    tg_app_hash: str,
+    app_title: str,
+    app_shortname: str,
+    app_url: str,
+    app_platform: str,
+    app_desc: str
 ):
     # pylint: disable-msg=too-many-arguments
     """ creates a new my.telegram.org/apps

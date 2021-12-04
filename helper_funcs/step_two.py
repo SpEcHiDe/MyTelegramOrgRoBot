@@ -18,13 +18,14 @@
 """ STEP TWO """
 
 import requests
+from typing import Tuple
 
 
 def login_step_get_stel_cookie(
-        input_phone_number,
-        tg_random_hash,
-        tg_cloud_password
-):
+    input_phone_number: str,
+    tg_random_hash: str,
+    tg_cloud_password: str
+) -> Tuple[bool, str]:
     """Logins to my.telegram.org and returns the cookie,
     or False in case of failure"""
     request_url = "https://my.telegram.org/auth/login"
