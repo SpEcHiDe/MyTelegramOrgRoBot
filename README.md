@@ -39,7 +39,7 @@ cd MyTelegramOrgRoBot
 
 - create a virtual environment.
 ```sh
-virtualenv -p /usr/bin/python3 venv
+python3 -m venv venv
 ```
 
 - activate the virtual environment.
@@ -52,18 +52,18 @@ virtualenv -p /usr/bin/python3 venv
 pip install -r requirements.txt
 ```
 
-- create config.py
+- create config.env
 
 - run the bot
 ```sh
-python3 bot.py
+python -m bot
 ```
 
 ## [@SpEcHlDe](https://telegram.dog/ThankTelegram)
 
 - Only `TG_BOT_TOKEN` environment variables is mandatory.
 - The Telegram RoBot should work without setting the non-mandatory variables.
-- Please report any issues to the support group: [@SpEcHlDe](https://t.me/joinchat/AHAujEjG4FBO-TH-NrVVbg)
+- Please report any issues to the support group: [@SpEcHlDe](https://telegram.dog/ThankTelegram)
 
 
 ## learning
@@ -79,5 +79,6 @@ check out the [helper_funcs](https://github.com/SpEcHiDe/MyTelegramOrgRoBot/tree
   - [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot)
   - [requests](https://github.com/psf/requests)
   - [beautifulsoup4](https://pypi.org/project/beautifulsoup4)
+  - [Pyrogram](https://github.com/pyrogram/pyrogram)
 - Thanks to:
   - [me](https://tx.me/SpEcHlDe)

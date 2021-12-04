@@ -17,18 +17,13 @@
 
 """ STEP FIVE """
 
-import logging
 
-
-# Enable logging
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
+from telegram import (
+    Message
 )
-LOGGER = logging.getLogger(__name__)
 
 
-def parse_to_meaning_ful_text(input_phone_number, in_dict):
+def parse_to_meaning_ful_text(input_phone_number: str, in_dict) -> str:
     """ convert the dictionary returned in STEP FOUR
     into Telegram HTML text """
     me_t = ""
@@ -67,39 +62,39 @@ def parse_to_meaning_ful_text(input_phone_number, in_dict):
     return me_t
 
 
-def extract_code_imn_ges(ptb_message):
+def extract_code_imn_ges(ptb_message: Message) -> str:
     """ extracts the input message, and returns the
     Telegram Web login code"""
     # initialize a variable that can be used
     # to store the web login code after a
     # sequence of conditionals
-    telegram__web_login_code = None
+    telegram_web_login_code = None
     # the original message text sent by the user
     incoming_message_text = ptb_message.text
     # lower case can be used as a helper in the
     # comparison logic
     # N.B.: the PASSWORD is case sensitive,
-    # so, "telegram__web_login_code" should have the original text,
+    # so, "telegram_web_login_code" should have the original text,
     # without conversion
     incoming_message_text_in_lower_case = incoming_message_text.lower()
     if "web login code" in incoming_message_text_in_lower_case:
         parted_message_pts = incoming_message_text.split("\n")
         # this logic is deduced by Trial and Error
         if len(parted_message_pts) >= 2:
-            telegram__web_login_code = parted_message_pts[1]
+            telegram_web_login_code = parted_message_pts[1]
             # there might be a better way, but 😐😪😪
     elif "\n" in incoming_message_text_in_lower_case:
         # this condition ideally, should not occur,
-        LOGGER.info("did it come inside this 'elif' ?")
+        # ("did it come inside this 'elif' ?")
+        telegram_web_login_code = None
     else:
-        telegram__web_login_code = incoming_message_text
-    return telegram__web_login_code
+        telegram_web_login_code = incoming_message_text
+    return telegram_web_login_code
 
 
-def get_phno_imn_ges(ptb_message):
+def get_phno_imn_ges(ptb_message: Message) -> str:
     """ gets the phone number (in international format),
     from the input message"""
-    LOGGER.info(ptb_message)
     my_telegram_ph_no = None
     if ptb_message.text is not None:
         if len(ptb_message.entities) > 0:
@@ -115,18 +110,3 @@ def get_phno_imn_ges(ptb_message):
         if ptb_message.contact.phone_number != "":
             my_telegram_ph_no = ptb_message.contact.phone_number
     return my_telegram_ph_no
-
-
-def compareFiles(first, second):
-    """ this code was copied
-    line for line from
-    https://github.com/DrKLO/Telegram/blob/7fb9f0b85621940e0a5ba977278f6f27fc323046/apkdiff.py#L4
-    """
-    while True:
-        firstBytes = first.read(4096)
-        secondBytes = second.read(4096)
-        if firstBytes != secondBytes:
-            return False
-        if firstBytes == b"":
-            break
-    return True

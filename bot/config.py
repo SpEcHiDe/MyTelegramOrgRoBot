@@ -1,8 +1,31 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Copyright (c) Shrimadhav U K
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
 import os
-from translation import Translation
+from dotenv import load_dotenv
+from bot.translation import Translation
+
+# apparently, no error appears even if the path does not exists
+load_dotenv("config.env")
 
 
 class Config:
+    WEBHOOK = bool(os.environ.get("WEBHOOK", False))
     # get a token from @BotFather
     TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", None)
     # required for running on Heroku
@@ -12,8 +35,8 @@ class Config:
     CHUNK_SIZE = 10280
     # MyTelegram.org
     # configurtion required while creating new application
-    APP_TITLE = os.environ.get("APP_TITLE", "usetgbot")
-    APP_SHORT_NAME = os.environ.get("APP_SHORT_NAME", "usetgbot")
+    APP_TITLE = os.environ.get("APP_TITLE", "usetgxbot")
+    APP_SHORT_NAME = os.environ.get("APP_SHORT_NAME", "usetgxbot")
     APP_URL = os.environ.get("APP_URL", "https://telegram.dog/UseTGxBot")
     # these platform informations were obtained
     # on 27.01.2020 21:15:50 IST
@@ -60,11 +83,3 @@ class Config:
         "IN_VALID_PHNO_PVDED",
         Translation.IN_VALID_PHNO_PVDED
     )
-    # the below strings are not meant to be configurable :\(
-    VFCN_CHECKING_ONE = "\"It is a beautiful and terrible thing, and should therefore be treated with great caution.\""
-    ORIGINAL_CODE = "aHR0cHM6Ly9naXRodWIuY29tL1NwRWNIaURlL015VGVsZWdyYW1PcmdSb0JvdC9yYXcvbWFzdGVyL2JvdC5weQ=="
-    VFCN_RETURN_STATUS = "'compareFiles' returned '{ret_status}'."
-
-
-class Development(Config):
-    pass
