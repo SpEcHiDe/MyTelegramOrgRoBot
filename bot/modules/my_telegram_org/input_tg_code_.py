@@ -18,9 +18,7 @@
 
 from telegram import (
     Update,
-    ParseMode,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup
+    ParseMode
 )
 from telegram.ext import (
     ConversationHandler
@@ -107,21 +105,7 @@ def input_tg_code(update: Update, context):
             # and send to the user
             aes_mesg_i.edit_text(
                 text=me_t,
-                parse_mode=ParseMode.HTML,
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                text="Pyrogram",
-                                callback_data="pyrogram"
-                            ),
-                            InlineKeyboardButton(
-                                text="Telethon",
-                                callback_data="telethon"
-                            )
-                        ]
-                    ]
-                )
+                parse_mode=ParseMode.HTML
             )
         else:
             # warning("creating APP ID caused error %s", response_dv)

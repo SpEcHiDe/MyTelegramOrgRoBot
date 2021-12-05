@@ -18,7 +18,6 @@
 
 from telegram.ext import (
     Updater,
-    # CallbackQueryHandler,
     CommandHandler,
     MessageHandler,
     Filters,
@@ -48,11 +47,7 @@ tg_bot_dis_patcher = updater.dispatcher
 # Add conversation handler with the states
 conv_handler = ConversationHandler(
     entry_points=[
-        CommandHandler("start", start),
-
-        # CallbackQueryHandler(t_ele_thon_btn_, pattern="telethon"),
-
-        # CallbackQueryHandler(p_yro_gram_btn_, pattern="pyrogram"),
+        CommandHandler("start", start)
     ],
 
     states={

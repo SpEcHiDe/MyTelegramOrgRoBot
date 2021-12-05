@@ -4,6 +4,4 @@ requests==2.24.0
 
 beautifulsoup4==4.9.1
 
-pyrogram==1.2.11
-
 python-dotenv>=0.10
