@@ -18,10 +18,10 @@
 """ STEP FOUR """
 
 import random
-import requests
+from aiohttp import ClientSession
 
 
-def create_new_tg_app(
+async def create_new_tg_app(
     stel_token: str,
     tg_app_hash: str,
     app_title: str,
@@ -45,9 +45,11 @@ def create_new_tg_app(
         "app_platform": random.choice(app_platform),
         "app_desc": app_desc
     }
-    response_c = requests.post(
-        request_url,
-        data=request_data,
-        headers=custom_header
-    )
-    return response_c
+    async with ClientSession() as requests:
+        response_c = await requests.post(
+            request_url,
+            data=request_data,
+            headers=custom_header
+        )
+        resonse_c = await response_c.text()
+    return resonse_c

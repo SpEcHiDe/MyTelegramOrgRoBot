@@ -17,9 +17,10 @@
 
 
 from telegram import (
-    Update,
-    ParseMode
+    Update
 )
+from telegram.constants import ParseMode
+from telegram.ext import ContextTypes
 from bot import (
     Config,
     GLOBAL_USERS_DICTIONARY,
@@ -34,7 +35,7 @@ from bot.helper_funcs.my_telegram_org.step_one import (
 )
 
 
-def input_phone_number(update: Update, context):
+async def input_phone_number(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """ ConversationHandler INPUT_PHONE_NUMBER state """
     # info(update)
     user = update.message.from_user
@@ -44,13 +45,13 @@ def input_phone_number(update: Update, context):
     # receive the phone number entered
     input_text = get_phno_imn_ges(update.message)
     if input_text is None:
-        update.message.reply_text(
+        await update.message.reply_text(
             text=Config.IN_VALID_PHNO_PVDED,
             parse_mode=ParseMode.HTML
         )
         return INPUT_PHONE_NUMBER
     # try logging in to my.telegram.org/apps
-    random_hash = request_tg_code_get_random_hash(input_text)
+    random_hash = await request_tg_code_get_random_hash(input_text)
     GLOBAL_USERS_DICTIONARY.update({
         user.id: {
             "input_phone_number": input_text,
@@ -59,7 +60,7 @@ def input_phone_number(update: Update, context):
     })
     # save the random hash returned in a dictionary
     # ask user for the **confidential** Telegram code
-    update.message.reply_text(
+    await update.message.reply_text(
         Config.AFTER_RECVD_CODE_TEXT,
         parse_mode=ParseMode.HTML
     )

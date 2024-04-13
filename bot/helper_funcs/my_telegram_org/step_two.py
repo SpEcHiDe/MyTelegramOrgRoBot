@@ -17,11 +17,11 @@
 
 """ STEP TWO """
 
-import requests
+from aiohttp import ClientSession
 from typing import Tuple
 
 
-def login_step_get_stel_cookie(
+async def login_step_get_stel_cookie(
     input_phone_number: str,
     tg_random_hash: str,
     tg_cloud_password: str
@@ -34,11 +34,12 @@ def login_step_get_stel_cookie(
         "random_hash": tg_random_hash,
         "password": tg_cloud_password
     }
-    response_c = requests.post(request_url, data=request_data)
-    #
+    async with ClientSession() as requests:
+        response_c = await requests.post(request_url, data=request_data)
+        response_c_text = await response_c.text()
     re_val = None
     re_status_id = None
-    if response_c.text == "true":
+    if response_c_text == "true":
         re_val = response_c.headers.get("Set-Cookie")
         re_status_id = True
     else:

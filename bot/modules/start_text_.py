@@ -17,16 +17,17 @@
 
 
 from telegram import (
-    Update,
-    ParseMode
+    Update
 )
+from telegram.constants import ParseMode
+from telegram.ext import ContextTypes
 from bot import Config, INPUT_PHONE_NUMBER
 
 
-def start(update: Update, context):
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """ ConversationHandler entry_point /start """
-    update.message.reply_text(
+    await update.message.reply_text(
         Config.START_TEXT,
-        parse_mode=ParseMode.HTML
+        parse_mode="html"
     )
     return INPUT_PHONE_NUMBER

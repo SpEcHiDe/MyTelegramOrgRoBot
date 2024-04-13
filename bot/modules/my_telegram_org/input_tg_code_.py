@@ -17,11 +17,12 @@
 
 
 from telegram import (
-    Update,
-    ParseMode
+    Update
 )
+from telegram.constants import ParseMode
 from telegram.ext import (
-    ConversationHandler
+    ConversationHandler,
+    ContextTypes
 )
 from bot import (
     Config,
@@ -39,7 +40,7 @@ from bot.helper_funcs.my_telegram_org.step_three import scarp_tg_existing_app
 from bot.helper_funcs.my_telegram_org.step_four import create_new_tg_app
 
 
-def input_tg_code(update: Update, context):
+async def input_tg_code(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """ ConversationHandler INPUT_TG_CODE state """
     # info(update)
     user = update.message.from_user
@@ -48,17 +49,17 @@ def input_tg_code(update: Update, context):
     current_user_creds = GLOBAL_USERS_DICTIONARY.get(user.id)
     # reply "processing" progress to user
     # we will use this message to edit the status as required, later
-    aes_mesg_i = update.message.reply_text(Config.BEFORE_SUCC_LOGIN)
+    aes_mesg_i = await update.message.reply_text(Config.BEFORE_SUCC_LOGIN)
     #
     provided_code = extract_code_imn_ges(update.message)
     if provided_code is None:
-        aes_mesg_i.edit_text(
+        await aes_mesg_i.edit_text(
             text=Config.IN_VALID_CODE_PVDED,
             parse_mode=ParseMode.HTML
         )
         return INPUT_PHONE_NUMBER
     # login using provided code, and get cookie
-    status_r, cookie_v = login_step_get_stel_cookie(
+    status_r, cookie_v = await login_step_get_stel_cookie(
         current_user_creds.get("input_phone_number"),
         current_user_creds.get("random_hash"),
         provided_code
@@ -66,11 +67,11 @@ def input_tg_code(update: Update, context):
     if status_r:
         # scrap the my.telegram.org/apps page
         # and check if the user had previously created an app
-        status_t, response_dv = scarp_tg_existing_app(cookie_v)
+        status_t, response_dv = await scarp_tg_existing_app(cookie_v)
         if not status_t:
             # if not created
             # create an app by the provided details
-            create_new_tg_app(
+            await create_new_tg_app(
                 cookie_v,
                 response_dv.get("tg_app_hash"),
                 Config.APP_TITLE,
@@ -83,7 +84,7 @@ def input_tg_code(update: Update, context):
         # it is guranteed that now the user will have an APP ID.
         # if not, the stars have failed us
         # and throw that error back to the user
-        status_t, response_dv = scarp_tg_existing_app(cookie_v)
+        status_t, response_dv = await scarp_tg_existing_app(cookie_v)
         if status_t:
             # parse the scrapped page into an user readable
             input_phone_number = current_user_creds.get("input_phone_number")
@@ -103,15 +104,15 @@ def input_tg_code(update: Update, context):
             # add channel ads at the bottom, because why not?
             me_t += Config.FOOTER_TEXT
             # and send to the user
-            aes_mesg_i.edit_text(
+            await aes_mesg_i.edit_text(
                 text=me_t,
                 parse_mode=ParseMode.HTML
             )
         else:
             # warning("creating APP ID caused error %s", response_dv)
-            aes_mesg_i.edit_text(Config.ERRED_PAGE)
+            await aes_mesg_i.edit_text(Config.ERRED_PAGE)
     else:
         # return the Telegram error message to user,
         # incase of incorrect LogIn
-        aes_mesg_i.edit_text(cookie_v)
+        await aes_mesg_i.edit_text(cookie_v)
     return ConversationHandler.END

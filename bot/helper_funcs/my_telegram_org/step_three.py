@@ -17,20 +17,21 @@
 
 """ STEP THREE """
 
-import requests
+from aiohttp import ClientSession
 from bs4 import BeautifulSoup
 from typing import Tuple, Dict
 
 
-def scarp_tg_existing_app(stel_token: str) -> Tuple[bool, Dict]:
+async def scarp_tg_existing_app(stel_token: str) -> Tuple[bool, Dict]:
     """scraps the web page using the provided cookie,
     returns True or False appropriately"""
     request_url = "https://my.telegram.org/apps"
     custom_header = {
         "Cookie": stel_token
     }
-    response_c = requests.get(request_url, headers=custom_header)
-    response_text = response_c.text
+    async with ClientSession() as requests:
+        response_c = await requests.get(request_url, headers=custom_header)
+        response_text = await response_c.text()
     # print(response_text)
     soup = BeautifulSoup(response_text, features="html.parser")
     title_of_page = soup.title.string

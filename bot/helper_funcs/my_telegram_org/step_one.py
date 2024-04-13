@@ -17,10 +17,11 @@
 
 """ STEP ONE """
 
-import requests
+from aiohttp import ClientSession
+from json import loads
 
 
-def request_tg_code_get_random_hash(input_phone_number: str) -> str:
+async def request_tg_code_get_random_hash(input_phone_number: str) -> str:
     """ requests Login Code
     and returns a random_hash
     which is used in STEP TWO """
@@ -28,6 +29,7 @@ def request_tg_code_get_random_hash(input_phone_number: str) -> str:
     request_data = {
         "phone": input_phone_number
     }
-    response_c = requests.post(request_url, data=request_data)
-    json_response = response_c.json()
+    async with ClientSession() as requests:
+        response_c = await requests.post(request_url, data=request_data)
+        json_response = loads(await response_c.text())
     return json_response["random_hash"]

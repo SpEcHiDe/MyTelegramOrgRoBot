@@ -15,12 +15,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
 from telegram.ext import (
-    Updater,
+    Application,
     CommandHandler,
     MessageHandler,
-    Filters,
+    filters,
     ConversationHandler
 )
 from bot import (
@@ -37,60 +36,58 @@ from bot.modules.my_telegram_org.input_tg_code_ import (
 )
 
 
-""" Initial Entry Point """
-# Create the Updater and pass it your bot's token.
-updater = Updater(Config.TG_BOT_TOKEN)
+def main():
+    """ Initial Entry Point """
+    # Create the Application and pass it your bot's token.
+    application = Application.builder(
+    ).token(
+        Config.TG_BOT_TOKEN
+    ).build()
 
-# Get the dispatcher to register handlers
-tg_bot_dis_patcher = updater.dispatcher
+    # Add conversation handler with the states
+    conv_handler = ConversationHandler(
+        entry_points=[
+            CommandHandler("start", start)
+        ],
 
-# Add conversation handler with the states
-conv_handler = ConversationHandler(
-    entry_points=[
-        CommandHandler("start", start)
-    ],
+        states={
+            INPUT_PHONE_NUMBER: [MessageHandler(
+                filters.TEXT | filters.CONTACT,
+                input_phone_number
+            )],
 
-    states={
-        INPUT_PHONE_NUMBER: [MessageHandler(
-            Filters.text | Filters.contact,
-            input_phone_number
-        )],
+            INPUT_TG_CODE: [MessageHandler(
+                filters.TEXT,
+                input_tg_code
+            )],
+        },
 
-        INPUT_TG_CODE: [MessageHandler(
-            Filters.text,
-            input_tg_code
-        )],
-    },
-
-    fallbacks=[CommandHandler('start', start)]
-)
-
-tg_bot_dis_patcher.add_handler(conv_handler)
-
-# log all errors
-# tg_bot_dis_patcher.add_error_handler(error)
-
-# Start the Bot
-if Config.WEBHOOK:
-    updater.start_webhook(
-        listen="0.0.0.0",
-        port=Config.PORT,
-        url_path=Config.TG_BOT_TOKEN
+        fallbacks=[CommandHandler("start", start)]
     )
-    # https://t.me/c/1186975633/22915
-    updater.bot.set_webhook(
-        url=Config.URL + Config.TG_BOT_TOKEN
+
+    application.add_handler(conv_handler)
+
+    # log all errors
+    # application.add_error_handler(error)
+
+    print(
+        "Bot Starting: Join @SpEcHlDe (https://tx.me/SpEcHlDe)"
     )
-else:
-    updater.start_polling()
 
-print(
-    """
-Bot Started: Join @SpEcHlDe (https://tx.me/SpEcHlDe)
-    """
-)
+    # Start the Bot
+    if Config.WEBHOOK:
+        application.run_webhook(
+            listen="0.0.0.0",
+            port=Config.PORT,
+            url_path=Config.TG_BOT_TOKEN
+        )
+        # Manually set a webhook, afterwards
+        # # https://t.me/c/1186975633/22915
+        # await application.bot.set_webhook(
+        #     url=Config.URL + Config.TG_BOT_TOKEN
+        # )
+    else:
+        # Run the bot until the user presses Ctrl-C
+        application.run_polling()
 
-# Run the bot until you press Ctrl-C or the process receives SIGINT,
-# SIGTERM or SIGABRT. This should be used most of the time, since
-# start_polling() is non-blocking and will stop the bot gracefully.
-updater.idle()
+main()
